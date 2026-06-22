@@ -1,0 +1,245 @@
+{
+  "dataset": "/home/hyang/mediQ/scope_saved/reward_datasets/scale_qwen3_4b_branch_d3_hightemp_conf5_train4k_no_reasoning_scope_reward_qwen3_flat_cumulative_full",
+  "num_conversations": 48879,
+  "num_features": 26,
+  "reward_targets": [
+    "reward_final",
+    "reward_mean",
+    "reward_max",
+    "reward_sum",
+    "reward_delta_sum",
+    "reward_delta_max",
+    "final_turn_reward_mean"
+  ],
+  "top_by_abs_spearman": [
+    {
+      "target": "reward_sum",
+      "feature": "Avg Model Distance from User",
+      "n": 48879,
+      "pearson": -0.3389311899794523,
+      "spearman": -0.42588530226974874,
+      "abs_spearman": 0.42588530226974874,
+      "abs_pearson": 0.3389311899794523
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Number of Turns",
+      "n": 48879,
+      "pearson": 0.41240180003453136,
+      "spearman": 0.42189156732063926,
+      "abs_spearman": 0.42189156732063926,
+      "abs_pearson": 0.41240180003453136
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Semantic Cohesion",
+      "n": 48879,
+      "pearson": 0.3211939219233638,
+      "spearman": 0.4094131710883184,
+      "abs_spearman": 0.4094131710883184,
+      "abs_pearson": 0.3211939219233638
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Goal Convergence Ratio",
+      "n": 48879,
+      "pearson": 0.33542032174010017,
+      "spearman": 0.34318520935928354,
+      "abs_spearman": 0.34318520935928354,
+      "abs_pearson": 0.33542032174010017
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Conversation Drift from Goal",
+      "n": 48879,
+      "pearson": 0.30144450393479116,
+      "spearman": 0.3202089708951465,
+      "abs_spearman": 0.3202089708951465,
+      "abs_pearson": 0.30144450393479116
+    },
+    {
+      "target": "reward_mean",
+      "feature": "Avg User Distance from Model",
+      "n": 48879,
+      "pearson": -0.10712459879522515,
+      "spearman": -0.2704755065465136,
+      "abs_spearman": 0.2704755065465136,
+      "abs_pearson": 0.10712459879522515
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Avg User Distance from Model",
+      "n": 48879,
+      "pearson": 0.01641862071264197,
+      "spearman": -0.2455259683227917,
+      "abs_spearman": 0.2455259683227917,
+      "abs_pearson": 0.01641862071264197
+    },
+    {
+      "target": "reward_mean",
+      "feature": "Semantic Cohesion",
+      "n": 48879,
+      "pearson": 0.11104148859272005,
+      "spearman": 0.240171449180392,
+      "abs_spearman": 0.240171449180392,
+      "abs_pearson": 0.11104148859272005
+    },
+    {
+      "target": "reward_mean",
+      "feature": "Model Self-Similarity",
+      "n": 48879,
+      "pearson": -0.004720703678577661,
+      "spearman": -0.2352842129735176,
+      "abs_spearman": 0.2352842129735176,
+      "abs_pearson": 0.004720703678577661
+    },
+    {
+      "target": "reward_final",
+      "feature": "Semantic Cohesion",
+      "n": 48879,
+      "pearson": 0.14782561665835117,
+      "spearman": 0.23140520917510765,
+      "abs_spearman": 0.23140520917510765,
+      "abs_pearson": 0.14782561665835117
+    },
+    {
+      "target": "reward_max",
+      "feature": "Semantic Cohesion",
+      "n": 48879,
+      "pearson": 0.14782561665835117,
+      "spearman": 0.23140520917510765,
+      "abs_spearman": 0.23140520917510765,
+      "abs_pearson": 0.14782561665835117
+    },
+    {
+      "target": "reward_delta_sum",
+      "feature": "Semantic Cohesion",
+      "n": 48879,
+      "pearson": 0.14782561665835117,
+      "spearman": 0.23140520917510765,
+      "abs_spearman": 0.23140520917510765,
+      "abs_pearson": 0.14782561665835117
+    },
+    {
+      "target": "final_turn_reward_mean",
+      "feature": "Semantic Cohesion",
+      "n": 48879,
+      "pearson": 0.14782561665835117,
+      "spearman": 0.23140520917510765,
+      "abs_spearman": 0.23140520917510765,
+      "abs_pearson": 0.14782561665835117
+    },
+    {
+      "target": "reward_final",
+      "feature": "Avg Model Distance from User",
+      "n": 48879,
+      "pearson": -0.1453692592210987,
+      "spearman": -0.2228062593993892,
+      "abs_spearman": 0.2228062593993892,
+      "abs_pearson": 0.1453692592210987
+    },
+    {
+      "target": "reward_max",
+      "feature": "Avg Model Distance from User",
+      "n": 48879,
+      "pearson": -0.1453692592210987,
+      "spearman": -0.2228062593993892,
+      "abs_spearman": 0.2228062593993892,
+      "abs_pearson": 0.1453692592210987
+    },
+    {
+      "target": "reward_delta_sum",
+      "feature": "Avg Model Distance from User",
+      "n": 48879,
+      "pearson": -0.1453692592210987,
+      "spearman": -0.2228062593993892,
+      "abs_spearman": 0.2228062593993892,
+      "abs_pearson": 0.1453692592210987
+    },
+    {
+      "target": "final_turn_reward_mean",
+      "feature": "Avg Model Distance from User",
+      "n": 48879,
+      "pearson": -0.1453692592210987,
+      "spearman": -0.2228062593993892,
+      "abs_spearman": 0.2228062593993892,
+      "abs_pearson": 0.1453692592210987
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Max Model Distance from Goal",
+      "n": 48879,
+      "pearson": 0.21472598551273833,
+      "spearman": 0.2205552308280096,
+      "abs_spearman": 0.2205552308280096,
+      "abs_pearson": 0.21472598551273833
+    },
+    {
+      "target": "reward_mean",
+      "feature": "Avg Model Distance from User",
+      "n": 48879,
+      "pearson": -0.09382911946826306,
+      "spearman": -0.2148850530506179,
+      "abs_spearman": 0.2148850530506179,
+      "abs_pearson": 0.09382911946826306
+    },
+    {
+      "target": "reward_mean",
+      "feature": "Max Model Self-Similarity",
+      "n": 48879,
+      "pearson": -0.0024466546908248473,
+      "spearman": -0.1952846440256497,
+      "abs_spearman": 0.1952846440256497,
+      "abs_pearson": 0.0024466546908248473
+    },
+    {
+      "target": "reward_final",
+      "feature": "Avg User Distance from Model",
+      "n": 48879,
+      "pearson": -0.027420964197895248,
+      "spearman": -0.19047355055015486,
+      "abs_spearman": 0.19047355055015486,
+      "abs_pearson": 0.027420964197895248
+    },
+    {
+      "target": "reward_max",
+      "feature": "Avg User Distance from Model",
+      "n": 48879,
+      "pearson": -0.027420964197895248,
+      "spearman": -0.19047355055015486,
+      "abs_spearman": 0.19047355055015486,
+      "abs_pearson": 0.027420964197895248
+    },
+    {
+      "target": "reward_delta_sum",
+      "feature": "Avg User Distance from Model",
+      "n": 48879,
+      "pearson": -0.027420964197895248,
+      "spearman": -0.19047355055015486,
+      "abs_spearman": 0.19047355055015486,
+      "abs_pearson": 0.027420964197895248
+    },
+    {
+      "target": "final_turn_reward_mean",
+      "feature": "Avg User Distance from Model",
+      "n": 48879,
+      "pearson": -0.027420964197895248,
+      "spearman": -0.19047355055015486,
+      "abs_spearman": 0.19047355055015486,
+      "abs_pearson": 0.027420964197895248
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Goal vs Initial Prompt Distance",
+      "n": 48879,
+      "pearson": 0.20067646417176896,
+      "spearman": 0.18848039621521848,
+      "abs_spearman": 0.18848039621521848,
+      "abs_pearson": 0.20067646417176896
+    }
+  ],
+  "outputs": {
+    "features": "/home/hyang/mediQ/results/scope_reward_feature_correspondence/conversation_features_with_rewards.csv",
+    "correlations": "/home/hyang/mediQ/results/scope_reward_feature_correspondence/feature_reward_correlations.csv"
+  }
+}

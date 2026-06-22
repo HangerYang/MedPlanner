@@ -1,0 +1,400 @@
+================================================================================
+EXAMPLE INTERACTION LOG
+Expert: ScaleExpert  |  Patient: FactSelectPatient
+Flags: --rationale_generation  |  --abstain_threshold 4.0  |  --max_questions 5
+NOTE: Model responses marked [MODEL RESPONSE] are simulated (no live model).
+      All prompts are exact — constructed by tracing the code against a real case.
+================================================================================
+
+════════════════════════════════════════════════════════════════════════════════
+CASE SETUP  (data/med_data/dev_100.jsonl, example id=0)
+════════════════════════════════════════════════════════════════════════════════
+
+Full context (hidden inside Patient, Expert never sees this directly):
+  [0] "A 21-year-old sexually active male complains of fever, pain during
+       urination, and inflammation and pain in the right knee."
+  [1] "A culture of the joint fluid shows a bacteria that does not ferment
+       maltose and has no polysaccharide capsule."
+  [2] "The physician orders antibiotic therapy for the patient."
+
+initial_info (what Expert sees upfront — only the first sentence):
+  "A 21-year-old sexually active male complains of fever, pain during
+   urination, and inflammation and pain in the right knee."
+
+Pre-computed atomic_facts (already in data, Patient skips decomposition):
+  1. A culture of the joint fluid shows a bacteria.
+  2. The bacteria does not ferment maltose.
+  3. The bacteria has no polysaccharide capsule.
+  4. The physician orders antibiotic therapy for the patient.
+
+Clinical question:
+  "The mechanism of action of the medication given blocks cell wall synthesis,
+   which of the following was given?"
+
+Options:
+  A: Gentamicin
+  B: Ciprofloxacin
+  C: Ceftriaxone
+  D: Trimethoprim
+
+Correct answer: C (Ceftriaxone)
+
+════════════════════════════════════════════════════════════════════════════════
+HOW ScaleExpert WITH --rationale_generation WORKS
+════════════════════════════════════════════════════════════════════════════════
+
+Each turn, ScaleExpert makes 2 LLM calls in sequence:
+
+  Call A — Scale confidence (scale_RG prompt):
+    Asks the model to rate its confidence on a 1–5 Likert scale WITH a reason.
+    Format:  REASON: <one sentence>
+             DECISION: <rating phrase>
+    Parsed to a number:  Very Unconfident=1, Somewhat Unconfident=2,
+                         Neither=3, Somewhat Confident=4, Very Confident=5
+    Abstain rule: score < 4.0  →  ask another question
+                  score >= 4.0 →  commit to an answer
+
+  Call B — Shadow answer (always, separate fresh prompt):
+    Asks the model to pick a letter choice given current info.
+    Even when abstaining, this is computed and logged (not sent to patient).
+
+  Call C — Question generator (only when abstaining):
+    Receives the scale conversation (A's prompt + A's response) as context,
+    then appends the question-generation task.
+
+  Call D — Patient fact selection (only when abstaining):
+    Patient receives the question and selects matching atomic facts verbatim.
+
+════════════════════════════════════════════════════════════════════════════════
+EXPERT TURN 1  —  interaction_history is empty
+════════════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────────────
+LLM CALL 1A — Expert scale confidence  (scale_RG prompt, rationale_generation=True)
+────────────────────────────────────────────────────────────────────────────────
+
+→ MESSAGES SENT TO MODEL:
+
+[system]
+You are a medical doctor trying to reason through a real-life clinical case.
+Based on your understanding of basic and clinical science, medical knowledge,
+and mechanisms underlying health, disease, patient care, and modes of therapy,
+respond according to the task specified by the user. Base your response on the
+current and standard practices referenced in medical guidelines.
+
+[user]
+A patient comes into the clinic presenting with a symptom as described in the
+conversation log below:
+
+PATIENT INFORMATION: A 21-year-old sexually active male complains of fever,
+pain during urination, and inflammation and pain in the right knee.
+CONVERSATION LOG:
+None
+QUESTION: The mechanism of action of the medication given blocks cell wall
+synthesis, which of the following was given?
+OPTIONS: A: Gentamicin, B: Ciprofloxacin, C: Ceftriaxone, D: Trimethoprim
+YOUR TASK: Medical conditions are complex, so you should seek to understand
+their situations across many features. First, consider which medical specialty
+is this patient's case; then, consider a list of necessary features a doctor
+would need to make the right medical judgment; finally, consider whether all
+necessary information is given in the conversation above. How confident are you
+to pick the correct option to the problem factually using the conversation log?
+Choose between the following ratings:
+"Very Confident" - The correct option is supported by all evidence, and there
+is enough evidence to eliminate the rest of the answers, so the option can be
+confirmed conclusively.
+"Somewhat Confident" - I have reasonably enough information to tell that the
+correct option is more likely than other options, more information is helpful
+to make a conclusive decision.
+"Neither Confident or Unconfident" - There are evident supporting the correct
+option, but further evidence is needed to be sure which one is the correct
+option.
+"Somewhat Unconfident" - There are evidence supporting more than one options,
+therefore more questions are needed to further distinguish the options.
+"Very Unconfident" - There are not enough evidence supporting any of the
+options, the likelihood of picking the correct option at this point is near
+random guessing.
+
+Answer in the following format:
+REASON: a one-sentence explanation of why you are or are not confident and
+what other information is needed.
+DECISION: chosen rating from the above list.
+
+← [MODEL RESPONSE]:
+   "REASON: Without culture results or specific diagnostic findings, I cannot
+   identify the causative organism or determine which antibiotic targets cell
+   wall synthesis in this case.
+   DECISION: Very Unconfident"
+
+   parse_likert_scale("very unconfident") → score = 1
+   abstain_decision = 1 < 4.0  →  TRUE  →  ABSTAIN (ask a question)
+
+────────────────────────────────────────────────────────────────────────────────
+LLM CALL 1B — Expert shadow answer  (fresh prompt, independent of Call 1A)
+────────────────────────────────────────────────────────────────────────────────
+
+→ MESSAGES SENT TO MODEL:
+
+[system]
+You are a medical doctor trying to reason through a real-life clinical case.
+[... same system message ...]
+
+[user]
+A patient comes into the clinic presenting with a symptom as described in the
+conversation log below:
+
+PATIENT INFORMATION: A 21-year-old sexually active male complains of fever,
+pain during urination, and inflammation and pain in the right knee.
+CONVERSATION LOG:
+None
+QUESTION: The mechanism of action of the medication given blocks cell wall
+synthesis, which of the following was given?
+OPTIONS: A: Gentamicin, B: Ciprofloxacin, C: Ceftriaxone, D: Trimethoprim
+YOUR TASK: Assume that you already have enough information from the above
+question-answer pairs to answer the patient inquiry, use the above information
+to produce a factual conclusion. Respond with the correct letter choice
+(A, B, C, or D) and NOTHING ELSE.
+LETTER CHOICE:
+
+← [MODEL RESPONSE]: "C"
+   (shadow answer — logged only, NOT returned to patient or shown to anyone)
+
+────────────────────────────────────────────────────────────────────────────────
+LLM CALL 1C — Expert question generator
+  (Receives Call 1A's full conversation as context, appends question task)
+────────────────────────────────────────────────────────────────────────────────
+
+→ MESSAGES SENT TO MODEL:
+
+[system]
+You are a medical doctor trying to reason through a real-life clinical case.
+[... same system message ...]
+
+[user]
+A patient comes into the clinic presenting with a symptom as described in the
+conversation log below:
+
+PATIENT INFORMATION: A 21-year-old sexually active male complains of fever,
+pain during urination, and inflammation and pain in the right knee.
+CONVERSATION LOG:
+None
+QUESTION: The mechanism of action of the medication given blocks cell wall
+synthesis, which of the following was given?
+OPTIONS: A: Gentamicin, B: Ciprofloxacin, C: Ceftriaxone, D: Trimethoprim
+YOUR TASK: Medical conditions are complex ...
+[... full scale_RG task prompt, same as Call 1A ...]
+
+[assistant]
+REASON: Without culture results or specific diagnostic findings, I cannot
+identify the causative organism or determine which antibiotic targets cell
+wall synthesis in this case.
+DECISION: Very Unconfident
+
+[user]
+If there are missing features that prevent you from picking a confident and
+factual answer to the inquiry, consider which features are not yet asked about
+in the conversation log; then, consider which missing feature is the most
+important to ask the patient in order to provide the most helpful information
+toward a correct medical decision. You can ask about any relevant information
+about the patient's case, such as family history, tests and exams results,
+treatments already done, etc. Consider what are the common questions asked in
+the specific subject relating to the patient's known symptoms, and what the
+best and most intuitive doctor would ask. Ask ONE SPECIFIC ATOMIC QUESTION to
+address this feature. The question should be bite-sized, and NOT ask for too
+much at once. Make sure to NOT repeat any questions from the above conversation
+log. Answer in the following format:
+ATOMIC QUESTION: the atomic question and NOTHING ELSE.
+ATOMIC QUESTION:
+
+← [MODEL RESPONSE]:
+   "ATOMIC QUESTION: What were the results of the joint fluid culture,
+   specifically what characteristics of the bacteria were identified?"
+
+   Parsed question: "What were the results of the joint fluid culture,
+   specifically what characteristics of the bacteria were identified?"
+
+════════════════════════════════════════════════════════════════════════════════
+PATIENT TURN 1  (responding to Expert's question)
+════════════════════════════════════════════════════════════════════════════════
+
+atomic_facts already present in data → decomposition step SKIPPED (no LLM call)
+
+────────────────────────────────────────────────────────────────────────────────
+LLM CALL 1D — Patient fact selection
+────────────────────────────────────────────────────────────────────────────────
+
+→ MESSAGES SENT TO MODEL:
+
+[system]
+You are a truthful medical assistant that understands the patient's information,
+and you are trying to answer questions from a medical doctor about the patient
+given a list of factual statements describing the patient. Please return the
+facts that answer the doctor's question verbatim without any additional
+information. If none of the facts answer the question, simply say "The patient
+cannot answer this question, please do not ask this question again."
+
+[user]
+List of facts:
+1. A culture of the joint fluid shows a bacteria.
+2. The bacteria does not ferment maltose.
+3. The bacteria has no polysaccharide capsule.
+4. The physician orders antibiotic therapy for the patient.
+
+Question from the doctor: "What were the results of the joint fluid culture,
+specifically what characteristics of the bacteria were identified?"
+
+Statements that answer the question:
+
+← [MODEL RESPONSE]:
+   "1. A culture of the joint fluid shows a bacteria.
+    2. The bacteria does not ferment maltose.
+    3. The bacteria has no polysaccharide capsule."
+
+Interaction history after Turn 1:
+  [0] Doctor Question: What were the results of the joint fluid culture,
+      specifically what characteristics of the bacteria were identified?
+      Patient Response: 1. A culture of the joint fluid shows a bacteria.
+                        2. The bacteria does not ferment maltose.
+                        3. The bacteria has no polysaccharide capsule.
+
+════════════════════════════════════════════════════════════════════════════════
+EXPERT TURN 2  —  interaction_history has 1 entry
+════════════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────────────
+LLM CALL 2A — Expert scale confidence  (scale_RG prompt)
+────────────────────────────────────────────────────────────────────────────────
+
+→ MESSAGES SENT TO MODEL:
+
+[system]
+You are a medical doctor trying to reason through a real-life clinical case.
+[... same system message ...]
+
+[user]
+A patient comes into the clinic presenting with a symptom as described in the
+conversation log below:
+
+PATIENT INFORMATION: A 21-year-old sexually active male complains of fever,
+pain during urination, and inflammation and pain in the right knee.
+CONVERSATION LOG:
+Doctor Question: What were the results of the joint fluid culture, specifically
+what characteristics of the bacteria were identified?
+Patient Response: 1. A culture of the joint fluid shows a bacteria.
+2. The bacteria does not ferment maltose.
+3. The bacteria has no polysaccharide capsule.
+QUESTION: The mechanism of action of the medication given blocks cell wall
+synthesis, which of the following was given?
+OPTIONS: A: Gentamicin, B: Ciprofloxacin, C: Ceftriaxone, D: Trimethoprim
+YOUR TASK: Medical conditions are complex, so you should seek to understand
+their situations across many features. First, consider which medical specialty
+is this patient's case; then, consider a list of necessary features a doctor
+would need to make the right medical judgment; finally, consider whether all
+necessary information is given in the conversation above. How confident are you
+to pick the correct option to the problem factually using the conversation log?
+Choose between the following ratings:
+"Very Confident" - The correct option is supported by all evidence, and there
+is enough evidence to eliminate the rest of the answers, so the option can be
+confirmed conclusively.
+"Somewhat Confident" - I have reasonably enough information to tell that the
+correct option is more likely than other options, more information is helpful
+to make a conclusive decision.
+"Neither Confident or Unconfident" - There are evident supporting the correct
+option, but further evidence is needed to be sure which one is the correct
+option.
+"Somewhat Unconfident" - There are evidence supporting more than one options,
+therefore more questions are needed to further distinguish the options.
+"Very Unconfident" - There are not enough evidence supporting any of the
+options, the likelihood of picking the correct option at this point is near
+random guessing.
+
+Answer in the following format:
+REASON: a one-sentence explanation of why you are or are not confident and
+what other information is needed.
+DECISION: chosen rating from the above list.
+
+← [MODEL RESPONSE]:
+   "REASON: The bacteria does not ferment maltose and lacks a polysaccharide
+   capsule, which is consistent with Neisseria gonorrhoeae — the standard
+   treatment is ceftriaxone, a beta-lactam that blocks cell wall synthesis.
+   DECISION: Somewhat Confident"
+
+   parse_likert_scale("somewhat confident") → score = 4
+   abstain_decision = 4 < 4.0  →  FALSE  →  DO NOT ABSTAIN (commit to answer)
+
+────────────────────────────────────────────────────────────────────────────────
+LLM CALL 2B — Expert final answer  (same role as shadow answer, now the real answer)
+────────────────────────────────────────────────────────────────────────────────
+
+→ MESSAGES SENT TO MODEL:
+
+[system]
+You are a medical doctor trying to reason through a real-life clinical case.
+[... same system message ...]
+
+[user]
+A patient comes into the clinic presenting with a symptom as described in the
+conversation log below:
+
+PATIENT INFORMATION: A 21-year-old sexually active male complains of fever,
+pain during urination, and inflammation and pain in the right knee.
+CONVERSATION LOG:
+Doctor Question: What were the results of the joint fluid culture, specifically
+what characteristics of the bacteria were identified?
+Patient Response: 1. A culture of the joint fluid shows a bacteria.
+2. The bacteria does not ferment maltose.
+3. The bacteria has no polysaccharide capsule.
+QUESTION: The mechanism of action of the medication given blocks cell wall
+synthesis, which of the following was given?
+OPTIONS: A: Gentamicin, B: Ciprofloxacin, C: Ceftriaxone, D: Trimethoprim
+YOUR TASK: Assume that you already have enough information from the above
+question-answer pairs to answer the patient inquiry, use the above information
+to produce a factual conclusion. Respond with the correct letter choice
+(A, B, C, or D) and NOTHING ELSE.
+LETTER CHOICE:
+
+← [MODEL RESPONSE]: "C"
+
+════════════════════════════════════════════════════════════════════════════════
+RESULT
+════════════════════════════════════════════════════════════════════════════════
+
+  Predicted:      C  (Ceftriaxone)
+  Correct answer: C  (Ceftriaxone)
+  Correct:        YES ✓
+
+  Questions asked: 1  (stopped as soon as scale score >= 4.0)
+  Total LLM calls: 6
+    Turn 1:  1A scale confidence  +  1B shadow answer  +  1C question gen  +  1D patient  =  4
+    Turn 2:  2A scale confidence  +  2B final answer                                       =  2
+
+════════════════════════════════════════════════════════════════════════════════
+KEY DIFFERENCES vs FixedExpert (from the previous log)
+════════════════════════════════════════════════════════════════════════════════
+
+FixedExpert (max_questions=2):
+  - Asks EXACTLY 2 questions regardless of what the model knows
+  - Abstention decision: pure rule (count questions), 0 LLM calls for this
+  - Question generator sees: [system] + [user: answer prompt]
+    (no reasoning context from the abstention step)
+
+ScaleExpert + --rationale_generation:
+  - Stopped after ONLY 1 question because score hit 4.0 (Somewhat Confident)
+  - Abstention decision: 1 LLM call — model explains WHY it is uncertain
+  - Question generator sees: [system] + [user: scale prompt] + [assistant: REASON+DECISION]
+    (model's own reasoning feeds into what question it asks next)
+  - Total calls: 6 vs 7 for FixedExpert in this case
+    (saved 1 question turn by stopping earlier when confident)
+
+════════════════════════════════════════════════════════════════════════════════
+SCALE RATINGS REFERENCE
+════════════════════════════════════════════════════════════════════════════════
+
+  Rating phrase               parsed score  abstain? (threshold=4.0)
+  ──────────────────────────  ────────────  ─────────────────────────
+  Very Confident                    5             NO  → answer
+  Somewhat Confident                4             NO  → answer
+  Neither Confident or Unconfident  3             YES → ask
+  Somewhat Unconfident              2             YES → ask
+  Very Unconfident                  1             YES → ask
+  (parse failed)                    0             YES → ask

@@ -1,0 +1,241 @@
+{
+  "num_conversations": 48879,
+  "num_features": 26,
+  "reward_target": "reward_sum",
+  "top_by_abs_spearman": [
+    {
+      "target": "reward_sum",
+      "feature": "Avg Model Distance from User",
+      "n": 48879,
+      "pearson": -0.3389311899794523,
+      "spearman": -0.42588530226974874,
+      "abs_spearman": 0.42588530226974874,
+      "abs_pearson": 0.3389311899794523
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Number of Turns",
+      "n": 48879,
+      "pearson": 0.41240180003453136,
+      "spearman": 0.42189156732063926,
+      "abs_spearman": 0.42189156732063926,
+      "abs_pearson": 0.41240180003453136
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Semantic Cohesion",
+      "n": 48879,
+      "pearson": 0.3211939219233638,
+      "spearman": 0.4094131710883184,
+      "abs_spearman": 0.4094131710883184,
+      "abs_pearson": 0.3211939219233638
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Goal Convergence Ratio",
+      "n": 48879,
+      "pearson": 0.33542032174010017,
+      "spearman": 0.34318520935928354,
+      "abs_spearman": 0.34318520935928354,
+      "abs_pearson": 0.33542032174010017
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Conversation Drift from Goal",
+      "n": 48879,
+      "pearson": 0.30144450393479116,
+      "spearman": 0.3202089708951465,
+      "abs_spearman": 0.3202089708951465,
+      "abs_pearson": 0.30144450393479116
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Avg User Distance from Model",
+      "n": 48879,
+      "pearson": 0.01641862071264197,
+      "spearman": -0.2455259683227917,
+      "abs_spearman": 0.2455259683227917,
+      "abs_pearson": 0.01641862071264197
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Max Model Distance from Goal",
+      "n": 48879,
+      "pearson": 0.21472598551273833,
+      "spearman": 0.2205552308280096,
+      "abs_spearman": 0.2205552308280096,
+      "abs_pearson": 0.21472598551273833
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Goal vs Initial Prompt Distance",
+      "n": 48879,
+      "pearson": 0.20067646417176896,
+      "spearman": 0.18848039621521848,
+      "abs_spearman": 0.18848039621521848,
+      "abs_pearson": 0.20067646417176896
+    },
+    {
+      "target": "reward_sum",
+      "feature": "User Self-Consistency",
+      "n": 48879,
+      "pearson": 0.20167289464511404,
+      "spearman": 0.18492813443516898,
+      "abs_spearman": 0.18492813443516898,
+      "abs_pearson": 0.20167289464511404
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Late Conversation Volatility",
+      "n": 48879,
+      "pearson": 0.1391744572465522,
+      "spearman": 0.18477499766988603,
+      "abs_spearman": 0.18477499766988603,
+      "abs_pearson": 0.1391744572465522
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Trend in Model Relevance",
+      "n": 48879,
+      "pearson": 0.2687801223898104,
+      "spearman": 0.18336467801123316,
+      "abs_spearman": 0.18336467801123316,
+      "abs_pearson": 0.2687801223898104
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Min Model Distance to Goal",
+      "n": 48879,
+      "pearson": -0.17322118053437527,
+      "spearman": -0.13100894039707803,
+      "abs_spearman": 0.13100894039707803,
+      "abs_pearson": 0.17322118053437527
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Conversation Volatility",
+      "n": 48879,
+      "pearson": -0.11286645129663997,
+      "spearman": -0.11719557721604508,
+      "abs_spearman": 0.11719557721604508,
+      "abs_pearson": 0.11286645129663997
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Max Model Self-Similarity",
+      "n": 48879,
+      "pearson": 0.1894754851429439,
+      "spearman": 0.11383930645936972,
+      "abs_spearman": 0.11383930645936972,
+      "abs_pearson": 0.1894754851429439
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Max User Distance from Model",
+      "n": 48879,
+      "pearson": 0.15113909890074662,
+      "spearman": 0.09177503755263149,
+      "abs_spearman": 0.09177503755263149,
+      "abs_pearson": 0.15113909890074662
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Model Self-Similarity",
+      "n": 48879,
+      "pearson": 0.18173169358198935,
+      "spearman": 0.07967131917757546,
+      "abs_spearman": 0.07967131917757546,
+      "abs_pearson": 0.18173169358198935
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Min Model Distance to User Prompt",
+      "n": 48879,
+      "pearson": -0.11721878751455413,
+      "spearman": -0.07893778794121208,
+      "abs_spearman": 0.07893778794121208,
+      "abs_pearson": 0.11721878751455413
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Model Adherence to Goal",
+      "n": 48879,
+      "pearson": 0.13269027536180913,
+      "spearman": 0.0727046950663929,
+      "abs_spearman": 0.0727046950663929,
+      "abs_pearson": 0.13269027536180913
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Max Model Distance from User",
+      "n": 48879,
+      "pearson": -0.07527121878614496,
+      "spearman": -0.06653453663963456,
+      "abs_spearman": 0.06653453663963456,
+      "abs_pearson": 0.07527121878614496
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Max Turn-to-Turn Distance",
+      "n": 48879,
+      "pearson": -0.07526378801315417,
+      "spearman": -0.06652210816103504,
+      "abs_spearman": 0.06652210816103504,
+      "abs_pearson": 0.07526378801315417
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Initial Response Distance",
+      "n": 48879,
+      "pearson": -0.07366092019797506,
+      "spearman": -0.06538747199691462,
+      "abs_spearman": 0.06538747199691462,
+      "abs_pearson": 0.07366092019797506
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Final Turn Distance from Goal",
+      "n": 48879,
+      "pearson": -0.021548376775629197,
+      "spearman": 0.062090738725624504,
+      "abs_spearman": 0.062090738725624504,
+      "abs_pearson": 0.021548376775629197
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Final Model Response to Goal Distance",
+      "n": 48879,
+      "pearson": -0.021548400579834055,
+      "spearman": 0.06209058308570308,
+      "abs_spearman": 0.06209058308570308,
+      "abs_pearson": 0.021548400579834055
+    },
+    {
+      "target": "reward_sum",
+      "feature": "User Adherence to Goal",
+      "n": 48879,
+      "pearson": 0.07178600566627975,
+      "spearman": 0.05605196100796393,
+      "abs_spearman": 0.05605196100796393,
+      "abs_pearson": 0.07178600566627975
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Model Adherence to Initial Prompt",
+      "n": 48879,
+      "pearson": 0.061007216243654246,
+      "spearman": 0.020926530151371185,
+      "abs_spearman": 0.020926530151371185,
+      "abs_pearson": 0.061007216243654246
+    },
+    {
+      "target": "reward_sum",
+      "feature": "Trend in Goal Adherence",
+      "n": 48879,
+      "pearson": -0.1238789523071012,
+      "spearman": 0.005790941117769249,
+      "abs_spearman": 0.005790941117769249,
+      "abs_pearson": 0.1238789523071012
+    }
+  ]
+}

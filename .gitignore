@@ -1,0 +1,52 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Model weights & large binaries
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.gguf
+mediQ_model_files/code-moe/
+
+# Large data files
+*.csv
+*.parquet
+*.arrow
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+
+# Output run directories (large trajectories / results)
+outputs/
+results/
+code-scope/output/
+medical-scope/output/
+convo-plan-SCOPE/train/transition_models/
+convo-plan-SCOPE/transition_models/deterministic/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Package build artifacts
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments / conda
+.env
+.venv
+env/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
